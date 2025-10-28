@@ -1,6 +1,6 @@
 import express from 'express';
-import { initGlobalMiddlewares, initRoutes, initErrorHandler } from './shared/middlewares';
-
+import { initGlobalMiddlewares, initErrorHandler } from './core/middlewares';
+import { initRoutes } from './routes';
 const app = express();
 
 // Global middlewares

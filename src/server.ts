@@ -1,5 +1,4 @@
-import { config } from './config/env';
-import { connectDB } from './config/database';
+import { config, connectDB } from './config';
 import app from './app';
 
 (async () => {

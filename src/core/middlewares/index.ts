@@ -1,4 +1,4 @@
 export * from './validateBody';
-export * from './initRoutes';
+export * from '../routes';
 export * from './initGlobalMiddlewares';
 export * from './initErrorHandler';

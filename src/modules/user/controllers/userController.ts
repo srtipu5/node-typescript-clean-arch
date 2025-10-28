@@ -1,12 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
-import { UserService } from '../services/userService';
-import { ErrorLog, log, sendData, sendError } from '../../../shared/utils';
+import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { IUserService } from '../interfaces/iUserService';
+import { ErrorLog, log, sendData, sendError } from '../../../core/utils';
 
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private service: IUserService) {}
 
-  async getUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getUsers(_: Request, res: Response): Promise<void> {
     try {
       log({
         message: `getUsers called`,
@@ -29,12 +29,10 @@ export class UserController {
     }
   }
 
-  async register(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async register(req: Request, res: Response): Promise<void> {
     try {
-      const user = await this.userService.register(req.body);
+      const user = await this.service.register(req.body);
       res.status(201).json(user);
-    } catch (error) {
-      next(error);
-    }
+    } catch (error) {}
   }
 }
