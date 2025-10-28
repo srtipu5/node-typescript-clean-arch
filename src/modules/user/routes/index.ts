@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { createUserSchema } from '../dtos/createUserDto';
 import { asyncHandler } from '../../../core/utils';
 import { validateBody } from '../../../core/middlewares';
-import { userController } from '../controllers';
+import { userController } from '..';
 
 const router = Router();
 
