@@ -6,7 +6,7 @@ import { config } from '../../../config';
 import { IJwtService } from '../interfaces/iJwtService';
 import { IUserRepository } from '../interfaces/iUserRepository';
 
-export class MsAuthController {
+export class MicrosoftController {
   constructor(
     private msService: IMsAuthService,
     private jwtService: IJwtService,
@@ -16,8 +16,8 @@ export class MsAuthController {
   async redirectToMicrosoft(_req: Request, res: Response): Promise<void> {
     try {
       const url = this.msService.generateMsAuthUrl();
-      sendData(res, { data: { url } });
-      // res.redirect(url)
+      // sendData(res, { data: { url } });
+      res.redirect(url);
     } catch (error) {
       sendError(res, {
         status: StatusCodes.INTERNAL_SERVER_ERROR,
@@ -38,28 +38,28 @@ export class MsAuthController {
 
       const msUser = await this.msService.verifyAndGetUserInfo(code);
 
-      let user = await this.userRepo.findByEmail(msUser.email);
+      // let user = await this.userRepo.findByEmail(msUser.email);
 
-      if (!user) {
-        user = await this.userRepo.create(msUser);
-      }
+      // if (!user) {
+      //   user = await this.userRepo.create(msUser);
+      // }
 
-      const tokens = this.jwtService.generateTokens(user.id);
-      await this.userRepo.updateRefreshToken(user.id, tokens.refreshToken);
+      // const tokens = this.jwtService.generateTokens(user.id);
+      // await this.userRepo.updateRefreshToken(user.id, tokens.refreshToken);
 
-      res.cookie('accessToken', tokens.accessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'lax',
-        maxAge: 60 * 60 * 1000, // 60 mins
-      });
+      // res.cookie('accessToken', tokens.accessToken, {
+      //   httpOnly: true,
+      //   secure: true,
+      //   sameSite: 'lax',
+      //   maxAge: 60 * 60 * 1000, // 60 mins
+      // });
 
-      res.cookie('refreshToken', tokens.refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      });
+      // res.cookie('refreshToken', tokens.refreshToken, {
+      //   httpOnly: true,
+      //   secure: true,
+      //   sameSite: 'lax',
+      //   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      // });
 
       res.redirect(`${config.FRONTEND_REDIRECT_URI}`);
     } catch (error) {
