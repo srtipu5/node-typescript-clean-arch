@@ -61,7 +61,7 @@ export class MsAuthController {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
 
-      res.redirect(`${config.FRONTEND_URL}`);
+      res.redirect(`${config.FRONTEND_REDIRECT_URI}`);
     } catch (error) {
       sendError(res, {
         status: StatusCodes.INTERNAL_SERVER_ERROR,
