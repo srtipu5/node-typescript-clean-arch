@@ -2,7 +2,7 @@ import axios from 'axios';
 import { config } from '../../../config';
 import { IMsAuthService } from '../interfaces/iMsAuthService';
 
-export class MsAuthService implements IMsAuthService {
+export class MicrosoftService implements IMsAuthService {
   private msAuthUrl: string;
   private msTokenUrl: string;
   private msProfileUrl: string;
@@ -24,11 +24,11 @@ export class MsAuthService implements IMsAuthService {
   }
 
   // generate ms redirect url
-  generateMsAuthUrl(): string {
+  generateAuthUrl(frontendRedirectUrl: string): string {
     const params = new URLSearchParams({
       client_id: config.MICROSOFT_GRAPH_CLIENT_ID,
       response_type: 'code',
-      redirect_uri: config.MICROSOFT_GRAPH_REDIRECT_URI,
+      redirect_uri: frontendRedirectUrl,
       response_mode: 'query',
       scope: [
         'openid',
@@ -46,15 +46,15 @@ export class MsAuthService implements IMsAuthService {
     return `${this.msAuthUrl}?${params.toString()}`;
   }
 
-  // verify token and get profile
-  async verifyAndGetUserInfo(code: string) {
-    const tokenResponse = await axios.post(
+  // verify and get token
+  async verifyAndGetToken(frontendRedirectUrl: string, code: string) {
+    const response = await axios.post(
       `${this.msTokenUrl}`,
       new URLSearchParams({
         client_id: config.MICROSOFT_GRAPH_CLIENT_ID,
         client_secret: config.MICROSOFT_GRAPH_CLIENT_SECRET,
         code,
-        redirect_uri: config.MICROSOFT_GRAPH_REDIRECT_URI,
+        redirect_uri: frontendRedirectUrl,
         grant_type: 'authorization_code',
       }),
       {
@@ -64,14 +64,7 @@ export class MsAuthService implements IMsAuthService {
       },
     );
 
-    const userResponse = await axios.get(this.msProfileUrl, {
-      headers: { Authorization: `Bearer ${tokenResponse.data.access_token}` },
-    });
-
-    return {
-      tokens: tokenResponse.data,
-      user: userResponse.data,
-    };
+    return response.data;
   }
 
   // create new refresh token
@@ -113,6 +106,30 @@ export class MsAuthService implements IMsAuthService {
     return response.data;
   }
 
+  // fetch all events
+  async getEvents(accessToken: string) {
+    const response = await axios.get(`${this.msEventsUrl}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    return response.data;
+  }
+
+  // fetch all files
+  async getFiles(accessToken: string) {
+    const response = await axios.get(`${this.msFilesUrl}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    return response.data;
+  }
+
+  // fetch contact info
+  async getContactInfo(accessToken: string) {
+    const response = await axios.get(`${this.msContactUrl}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    return response.data;
+  }
+
   // send email
   async sendMail(accessToken: string, data: any) {
     const { to, subject, body } = data;
@@ -134,22 +151,6 @@ export class MsAuthService implements IMsAuthService {
     return response.data;
   }
 
-  // fetch all events
-  async getEvents(accessToken: string) {
-    const response = await axios.get(`${this.msEventsUrl}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    return response.data;
-  }
-
-  // fetch all files
-  async getFiles(accessToken: string) {
-    const response = await axios.get(`${this.msFilesUrl}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    return response.data;
-  }
-
   // upload file
   async uploadFile(accessToken: string, fileName: string, content: any) {
     const response = await axios.put(
@@ -162,14 +163,6 @@ export class MsAuthService implements IMsAuthService {
         },
       },
     );
-    return response.data;
-  }
-
-  // fetch contact info
-  async getContactInfo(accessToken: string) {
-    const response = await axios.get(`${this.msContactUrl}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
     return response.data;
   }
 }

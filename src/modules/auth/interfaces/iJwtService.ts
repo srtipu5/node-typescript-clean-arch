@@ -3,7 +3,14 @@ export interface IJwtTokens {
   refreshToken: string;
 }
 
+export type TokenPayload = {
+  userId: string;
+  email: string;
+  name?: string;
+  type?: 'access' | 'refresh';
+};
+
 export interface IJwtService {
-  generateTokens(userId: string): IJwtTokens;
+  generateTokens(payload: TokenPayload): Promise<IJwtTokens>;
   verifyToken(token: string): any;
 }

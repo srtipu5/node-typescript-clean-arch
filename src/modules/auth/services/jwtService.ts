@@ -1,11 +1,21 @@
 import jwt from 'jsonwebtoken';
 import { config } from '../../../config';
-import { IJwtService } from '../interfaces/iJwtService';
+import { IJwtService, TokenPayload } from '../interfaces/iJwtService';
+import { IUserRepository } from '../interfaces/iUserRepository';
 
 export class JwtService implements IJwtService {
-  generateTokens(userId: string) {
-    const accessToken = jwt.sign({ userId }, config.JWT_SECRET, { expiresIn: '1h' });
-    const refreshToken = jwt.sign({ userId }, config.JWT_SECRET, { expiresIn: '7d' });
+  constructor(private userRepo: IUserRepository) {}
+  async generateTokens(payload: TokenPayload) {
+    const accessToken = jwt.sign({ ...payload, type: 'access' }, config.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    const refreshToken = jwt.sign({ userId: payload.userId, type: 'refresh' }, config.JWT_SECRET, {
+      expiresIn: '7d',
+    });
+
+    await this.userRepo.updateById(payload.userId, { accessToken, refreshToken });
+
     return { accessToken, refreshToken };
   }
 

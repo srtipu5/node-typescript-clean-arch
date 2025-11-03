@@ -24,7 +24,7 @@ export class TokenMgtController {
       const decoded: any = this.jwtService.verifyToken(refreshToken);
       const newTokens = this.jwtService.generateTokens(decoded.userId);
 
-      await this.userRepo.updateRefreshToken(decoded.userId, newTokens.refreshToken);
+      // await this.userRepo.updateById(decoded.userId, newTokens.refreshToken);
 
       sendData(res, { data: newTokens });
     } catch (error) {
