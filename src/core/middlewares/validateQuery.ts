@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { ZodType, ZodError } from 'zod';
-import { sendError } from '../utils';
+import { ZodType } from 'zod';
+import { formatZodError, sendError } from '../utils';
 
 export const validateQuery =
   <T extends ZodType<any, any>>(schema: T) =>
@@ -8,9 +8,8 @@ export const validateQuery =
     const result = schema.safeParse(req.query);
 
     if (!result.success) {
-      const formatted = (result.error as ZodError).format();
-      sendError(res, { data: formatted });
-      return;
+      const formattedErrors = formatZodError(result.error);
+      return sendError(res, { data: formattedErrors });
     }
 
     (req.query as unknown) = result.data;

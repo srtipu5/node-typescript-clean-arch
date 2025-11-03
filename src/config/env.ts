@@ -11,7 +11,7 @@ const envSchema = z.object({
   DEBUG: z.string().optional(),
 
   AI_SERVICES_URL: z.string().url(),
-  AI_SERVICES_TIMEOUT: z.string().transform(Number),
+  AI_PRICE_ESTIMATOR_SERVICE_URL: z.string().url(),
 
   MICROSOFT_GRAPH_CLIENT_ID: z.string(),
   MICROSOFT_GRAPH_CLIENT_SECRET: z.string(),
@@ -41,6 +41,9 @@ export const config = {
   MONGO_URI: env.MONGO_URI!,
   NODE_ENV: env.NODE_ENV || 'development',
   DEBUG: env.DEBUG === 'true',
+
+  AI_SERVICES_URL: env.AI_SERVICES_URL!,
+  AI_PRICE_ESTIMATOR_SERVICE_URL: env.AI_PRICE_ESTIMATOR_SERVICE_URL!,
 
   MICROSOFT_GRAPH_CLIENT_ID: env.MICROSOFT_GRAPH_CLIENT_ID!,
   MICROSOFT_GRAPH_CLIENT_SECRET: env.MICROSOFT_GRAPH_CLIENT_SECRET!,

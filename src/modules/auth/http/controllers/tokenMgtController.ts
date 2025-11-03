@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { sendData, sendError } from '../../../core/utils';
-import { IJwtService } from '../interfaces/iJwtService';
-import { IUserRepository } from '../interfaces/iUserRepository';
+import { sendData, sendError } from '../../../../core/utils';
 import { UpadateTokenDto } from '../dtos';
+import { IJwtService, IUserRepository } from '../../../../core/interfaces';
 
 export class TokenMgtController {
   constructor(

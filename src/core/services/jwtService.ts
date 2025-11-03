@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { config } from '../../../config';
+import { config } from '../../config';
 import { IJwtService, TokenPayload } from '../interfaces/iJwtService';
 import { IUserRepository } from '../interfaces/iUserRepository';
 

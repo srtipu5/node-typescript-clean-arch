@@ -1,5 +1,5 @@
-import { UserModel } from '../../../core/models/userModel';
-import { IUserRepository } from '../interfaces/iUserRepository';
+import { IUserRepository } from '../interfaces';
+import { UserModel } from '../models';
 
 export class UserRepository implements IUserRepository {
   async create(user: any) {

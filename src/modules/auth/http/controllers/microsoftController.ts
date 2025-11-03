@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { sendData, sendError } from '../../../core/utils';
-import { IMsAuthService } from '../interfaces/iMsAuthService';
-import { config } from '../../../config';
-import { IJwtService } from '../interfaces/iJwtService';
-import { IUserRepository } from '../interfaces/iUserRepository';
+import { sendData, sendError } from '../../../../core/utils';
+import { config } from '../../../../config';
 import axios from 'axios';
+import { IJwtService, IMsAuthService, IUserRepository } from '../../../../core/interfaces';
 
 export class MicrosoftController {
   constructor(
@@ -91,7 +89,7 @@ export class MicrosoftController {
     }
   }
 
-  async getEmails(req: Request, res: Response): Promise<void> {
+  async getEmails(req: Request, res: Response) {
     try {
       const user = await this.userRepo.findById(req.user.userId);
       if (!user) {
@@ -120,7 +118,7 @@ export class MicrosoftController {
     }
   }
 
-  async testFrontendProxy(req: Request, res: Response): Promise<void> {
+  async testFrontendProxy(req: Request, res: Response) {
     try {
       const code = req.query.code as string;
       if (!code) {
@@ -152,7 +150,7 @@ export class MicrosoftController {
     }
   }
 
-  async refreshToken(req: Request, res: Response): Promise<void> {
+  async refreshToken(req: Request, res: Response) {
     try {
       const { refreshToken } = req.body;
       const data = this.msService.refreshToken(refreshToken);
